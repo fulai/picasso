@@ -26,6 +26,9 @@ import android.support.annotation.RestrictTo;
 
 import static android.support.annotation.RestrictTo.Scope.LIBRARY;
 
+/**
+ *主要获取context
+ */
 @RestrictTo(LIBRARY)
 public final class PicassoProvider extends ContentProvider {
 

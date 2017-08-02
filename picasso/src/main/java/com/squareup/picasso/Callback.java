@@ -15,6 +15,9 @@
  */
 package com.squareup.picasso;
 
+/**
+ * 回调是否成功
+ */
 public interface Callback {
   void onSuccess();
 

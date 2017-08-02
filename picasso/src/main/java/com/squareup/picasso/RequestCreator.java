@@ -50,7 +50,9 @@ import static com.squareup.picasso.Utils.checkNotMain;
 import static com.squareup.picasso.Utils.createKey;
 import static com.squareup.picasso.Utils.log;
 
-/** Fluent API for building an image download request. */
+/** Fluent API for building an image download request.
+ * 请求者
+ * */
 @SuppressWarnings("UnusedDeclaration") // Public API.
 public class RequestCreator {
   private static final AtomicInteger nextId = new AtomicInteger();
@@ -61,7 +63,9 @@ public class RequestCreator {
   private boolean noFade;
   private boolean deferred;
   private boolean setPlaceholder = true;
+  //默认显示图片
   private int placeholderResId;
+  //加载图片错误显示图片
   private int errorResId;
   private int memoryPolicy;
   private int networkPolicy;
