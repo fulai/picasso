@@ -17,95 +17,104 @@ package com.squareup.picasso;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
 import static com.squareup.picasso.Picasso.Priority;
 
+/**
+ * 如果 RequestHandler 是图片加载的开始阶段，Action 则是结束阶段，
+ * Action 是抽象类，他决定了图片的最后一个环节：
+ * 如何将图片渲染在目标容器中（如 ImageView 和 RemoteViews 等），
+ * 由于目标容器有多种情况，因此也有多个子类。
+ *
+ * @param <T>
+ */
 abstract class Action<T> {
-  static class RequestWeakReference<M> extends WeakReference<M> {
-    final Action action;
+    static class RequestWeakReference<M> extends WeakReference<M> {
+        final Action action;
 
-    public RequestWeakReference(Action action, M referent, ReferenceQueue<? super M> q) {
-      super(referent, q);
-      this.action = action;
+        public RequestWeakReference(Action action, M referent, ReferenceQueue<? super M> q) {
+            super(referent, q);
+            this.action = action;
+        }
     }
-  }
 
-  final Picasso picasso;
-  final Request request;
-  final WeakReference<T> target;
-  final boolean noFade;
-  final int memoryPolicy;
-  final int networkPolicy;
-  final int errorResId;
-  final Drawable errorDrawable;
-  final String key;
-  final Object tag;
+    final Picasso picasso;
+    final Request request;
+    final WeakReference<T> target;
+    final boolean noFade;
+    final int memoryPolicy;
+    final int networkPolicy;
+    final int errorResId;
+    final Drawable errorDrawable;
+    final String key;
+    final Object tag;
 
-  boolean willReplay;
-  boolean cancelled;
+    boolean willReplay;
+    boolean cancelled;
 
-  Action(Picasso picasso, T target, Request request, int memoryPolicy, int networkPolicy,
-      int errorResId, Drawable errorDrawable, String key, Object tag, boolean noFade) {
-    this.picasso = picasso;
-    this.request = request;
-    this.target =
-        target == null ? null : new RequestWeakReference<>(this, target, picasso.referenceQueue);
-    this.memoryPolicy = memoryPolicy;
-    this.networkPolicy = networkPolicy;
-    this.noFade = noFade;
-    this.errorResId = errorResId;
-    this.errorDrawable = errorDrawable;
-    this.key = key;
-    this.tag = (tag != null ? tag : this);
-  }
+    Action(Picasso picasso, T target, Request request, int memoryPolicy, int networkPolicy,
+           int errorResId, Drawable errorDrawable, String key, Object tag, boolean noFade) {
+        this.picasso = picasso;
+        this.request = request;
+        this.target =
+                target == null ? null : new RequestWeakReference<>(this, target, picasso.referenceQueue);
+        this.memoryPolicy = memoryPolicy;
+        this.networkPolicy = networkPolicy;
+        this.noFade = noFade;
+        this.errorResId = errorResId;
+        this.errorDrawable = errorDrawable;
+        this.key = key;
+        this.tag = (tag != null ? tag : this);
+    }
 
-  abstract void complete(Bitmap result, Picasso.LoadedFrom from);
+    abstract void complete(Bitmap result, Picasso.LoadedFrom from);
 
-  abstract void error(Exception e);
+    abstract void error(Exception e);
 
-  void cancel() {
-    cancelled = true;
-  }
+    void cancel() {
+        cancelled = true;
+    }
 
-  Request getRequest() {
-    return request;
-  }
+    Request getRequest() {
+        return request;
+    }
 
-  T getTarget() {
-    return target == null ? null : target.get();
-  }
+    T getTarget() {
+        return target == null ? null : target.get();
+    }
 
-  String getKey() {
-    return key;
-  }
+    String getKey() {
+        return key;
+    }
 
-  boolean isCancelled() {
-    return cancelled;
-  }
+    boolean isCancelled() {
+        return cancelled;
+    }
 
-  boolean willReplay() {
-    return willReplay;
-  }
+    boolean willReplay() {
+        return willReplay;
+    }
 
-  int getMemoryPolicy() {
-    return memoryPolicy;
-  }
+    int getMemoryPolicy() {
+        return memoryPolicy;
+    }
 
-  int getNetworkPolicy() {
-    return networkPolicy;
-  }
+    int getNetworkPolicy() {
+        return networkPolicy;
+    }
 
-  Picasso getPicasso() {
-    return picasso;
-  }
+    Picasso getPicasso() {
+        return picasso;
+    }
 
-  Priority getPriority() {
-    return request.priority;
-  }
+    Priority getPriority() {
+        return request.priority;
+    }
 
-  Object getTag() {
-    return tag;
-  }
+    Object getTag() {
+        return tag;
+    }
 }

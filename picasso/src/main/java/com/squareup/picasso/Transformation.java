@@ -17,18 +17,21 @@ package com.squareup.picasso;
 
 import android.graphics.Bitmap;
 
-/** Image transformation. */
+/**
+ * Image transformation.
+ * 图像的变换接口，如果需要对图片进行范围裁切或几何变换均可实现该接口进行自定义
+ */
 public interface Transformation {
-  /**
-   * Transform the source bitmap into a new bitmap. If you create a new bitmap instance, you must
-   * call {@link android.graphics.Bitmap#recycle()} on {@code source}. You may return the original
-   * if no transformation is required.
-   */
-  Bitmap transform(Bitmap source);
+    /**
+     * Transform the source bitmap into a new bitmap. If you create a new bitmap instance, you must
+     * call {@link android.graphics.Bitmap#recycle()} on {@code source}. You may return the original
+     * if no transformation is required.
+     */
+    Bitmap transform(Bitmap source);
 
-  /**
-   * Returns a unique key for the transformation, used for caching purposes. If the transformation
-   * has parameters (e.g. size, scale factor, etc) then these should be part of the key.
-   */
-  String key();
+    /**
+     * Returns a unique key for the transformation, used for caching purposes. If the transformation
+     * has parameters (e.g. size, scale factor, etc) then these should be part of the key.
+     */
+    String key();
 }

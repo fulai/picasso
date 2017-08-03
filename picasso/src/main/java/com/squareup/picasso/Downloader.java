@@ -16,21 +16,27 @@
 package com.squareup.picasso;
 
 import android.support.annotation.NonNull;
+
 import java.io.IOException;
+
 import okhttp3.Response;
 
-/** A mechanism to load images from external resources such as a disk cache and/or the internet. */
+/**
+ * 图片下载器，内置了实现类 OkHttp3Downloader 和磁盘缓存策略，可自定义实现类进行扩展。
+ * A mechanism to load images from external resources such as a disk cache and/or the internet.
+ */
 public interface Downloader {
-  /**
-   * Download the specified image {@code url} from the internet.
-   *
-   * @throws IOException if the requested URL cannot successfully be loaded.
-   */
-  @NonNull Response load(@NonNull okhttp3.Request request) throws IOException;
+    /**
+     * Download the specified image {@code url} from the internet.
+     *
+     * @throws IOException if the requested URL cannot successfully be loaded.
+     */
+    @NonNull
+    Response load(@NonNull okhttp3.Request request) throws IOException;
 
-  /**
-   * Allows to perform a clean up for this {@link Downloader} including closing the disk cache and
-   * other resources.
-   */
-  void shutdown();
+    /**
+     * Allows to perform a clean up for this {@link Downloader} including closing the disk cache and
+     * other resources.
+     */
+    void shutdown();
 }

@@ -21,80 +21,89 @@ import android.view.View.OnAttachStateChangeListener;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.ImageView;
+
 import java.lang.ref.WeakReference;
 
+/**
+ * 延迟请求者
+ */
 class DeferredRequestCreator implements OnPreDrawListener, OnAttachStateChangeListener {
-  private final RequestCreator creator;
-  @VisibleForTesting final WeakReference<ImageView> target;
-  @VisibleForTesting Callback callback;
+    private final RequestCreator creator;
+    @VisibleForTesting
+    final WeakReference<ImageView> target;
+    @VisibleForTesting
+    Callback callback;
 
-  DeferredRequestCreator(RequestCreator creator, ImageView target, Callback callback) {
-    this.creator = creator;
-    this.target = new WeakReference<>(target);
-    this.callback = callback;
+    DeferredRequestCreator(RequestCreator creator, ImageView target, Callback callback) {
+        this.creator = creator;
+        this.target = new WeakReference<>(target);
+        this.callback = callback;
 
-    target.addOnAttachStateChangeListener(this);
+        target.addOnAttachStateChangeListener(this);
 
-    // Only add the pre-draw listener if the view is already attached.
-    // See: https://github.com/square/picasso/issues/1321
-    if (target.getWindowToken() != null) {
-      onViewAttachedToWindow(target);
-    }
-  }
-
-  @Override public void onViewAttachedToWindow(View view) {
-    view.getViewTreeObserver().addOnPreDrawListener(this);
-  }
-
-  @Override public void onViewDetachedFromWindow(View view) {
-    view.getViewTreeObserver().removeOnPreDrawListener(this);
-  }
-
-  @Override public boolean onPreDraw() {
-    ImageView target = this.target.get();
-    if (target == null) {
-      return true;
+        // Only add the pre-draw listener if the view is already attached.
+        // See: https://github.com/square/picasso/issues/1321
+        if (target.getWindowToken() != null) {
+            onViewAttachedToWindow(target);
+        }
     }
 
-    ViewTreeObserver vto = target.getViewTreeObserver();
-    if (!vto.isAlive()) {
-      return true;
+    @Override
+    public void onViewAttachedToWindow(View view) {
+        view.getViewTreeObserver().addOnPreDrawListener(this);
     }
 
-    int width = target.getWidth();
-    int height = target.getHeight();
-
-    if (width <= 0 || height <= 0 || target.isLayoutRequested()) {
-      return true;
+    @Override
+    public void onViewDetachedFromWindow(View view) {
+        view.getViewTreeObserver().removeOnPreDrawListener(this);
     }
 
-    target.removeOnAttachStateChangeListener(this);
-    vto.removeOnPreDrawListener(this);
-    this.target.clear();
+    @Override
+    public boolean onPreDraw() {
+        ImageView target = this.target.get();
+        if (target == null) {
+            return true;
+        }
 
-    this.creator.unfit().resize(width, height).into(target, callback);
-    return true;
-  }
+        ViewTreeObserver vto = target.getViewTreeObserver();
+        if (!vto.isAlive()) {
+            return true;
+        }
 
-  void cancel() {
-    creator.clearTag();
-    callback = null;
+        int width = target.getWidth();
+        int height = target.getHeight();
 
-    ImageView target = this.target.get();
-    if (target == null) {
-      return;
+        if (width <= 0 || height <= 0 || target.isLayoutRequested()) {
+            return true;
+        }
+
+        target.removeOnAttachStateChangeListener(this);
+        vto.removeOnPreDrawListener(this);
+        this.target.clear();
+
+        this.creator.unfit().resize(width, height).into(target, callback);
+        return true;
     }
-    this.target.clear();
 
-    target.removeOnAttachStateChangeListener(this);
+    void cancel() {
+        creator.clearTag();
+        callback = null;
 
-    ViewTreeObserver vto = target.getViewTreeObserver();
-    if (vto.isAlive()) {
-      vto.removeOnPreDrawListener(this);
+        ImageView target = this.target.get();
+        if (target == null) {
+            return;
+        }
+        this.target.clear();
+
+        target.removeOnAttachStateChangeListener(this);
+
+        ViewTreeObserver vto = target.getViewTreeObserver();
+        if (vto.isAlive()) {
+            vto.removeOnPreDrawListener(this);
+        }
     }
-  }
 
-  Object getTag() {
-    return creator.getTag();
-  }
+    Object getTag() {
+        return creator.getTag();
+    }
 }

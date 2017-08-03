@@ -101,6 +101,11 @@ final class Utils {
     // No instances.
   }
 
+  /**
+   * 计算bitmap占用空间大小
+   * @param bitmap
+   * @return
+   */
   static int getBitmapBytes(Bitmap bitmap) {
     int result = SDK_INT >= KITKAT ? bitmap.getAllocationByteCount() : bitmap.getByteCount();
     if (result < 0) {
@@ -239,8 +244,14 @@ final class Utils {
     return Math.max(Math.min(size, MAX_DISK_CACHE_SIZE), MIN_DISK_CACHE_SIZE);
   }
 
+  /**
+   * 计算可以缓存大小
+   * @param context
+   * @return
+   */
   static int calculateMemoryCacheSize(Context context) {
     ActivityManager am = getService(context, ACTIVITY_SERVICE);
+    //根据AndroidManifest的flag配置largeHeap是否为true,来判断是否需要用最大内存
     boolean largeHeap = (context.getApplicationInfo().flags & FLAG_LARGE_HEAP) != 0;
     int memoryClass = largeHeap ? am.getLargeMemoryClass() : am.getMemoryClass();
     // Target ~15% of the available heap.
