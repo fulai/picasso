@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import java.lang.ref.WeakReference;
 
 /**
- * 延迟请求者
+ * RequestCreator包装
  */
 class DeferredRequestCreator implements OnPreDrawListener, OnAttachStateChangeListener {
     private final RequestCreator creator;

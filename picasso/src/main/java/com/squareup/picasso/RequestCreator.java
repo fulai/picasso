@@ -767,6 +767,9 @@ public class RequestCreator {
         if (setPlaceholder) {
             setPlaceholder(target, getPlaceholderDrawable());
         }
+        //然后这个Action会发送给Dispatcher处理，然后根据发送的Action中的Request中的uri选择哪个图片加载器，
+        // 找到之后生成一个BitmapHunter对象，BitmapHunter是一个runnable,会执行加载图片的功能，最后加载完成之后
+        // ，通过Dispatcher进行回调
         Action action =
                 new ImageViewAction(picasso, target, request, memoryPolicy, networkPolicy, errorResId,
                         errorDrawable, requestKey, tag, callback, noFade);

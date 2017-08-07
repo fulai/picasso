@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 /**
  * Image transformation.
  * 图像的变换接口，如果需要对图片进行范围裁切或几何变换均可实现该接口进行自定义
+ * Image转换的接口，用在RequestCreateor.transform方法,可以实现圆角图片
  */
 public interface Transformation {
     /**

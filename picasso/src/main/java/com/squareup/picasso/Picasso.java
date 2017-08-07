@@ -157,14 +157,17 @@ public class Picasso {
     private final Listener listener;
     private final RequestTransformer requestTransformer;
     private final CleanupThread cleanupThread;
+    //图片的多种加载方式
     private final List<RequestHandler> requestHandlers;
 
     final Context context;
     final Dispatcher dispatcher;
     final Cache cache;
     final Stats stats;
+    //http://www.importnew.com/23182.html
     final Map<Object, Action> targetToAction;
     final Map<ImageView, DeferredRequestCreator> targetToDeferredRequestCreator;
+    //引用队列，根据引用队列中对象不为null，判断当前对象是否将要被垃圾回收
     final ReferenceQueue<Object> referenceQueue;
     final Bitmap.Config defaultBitmapConfig;
 
@@ -190,15 +193,22 @@ public class Picasso {
         // ResourceRequestHandler needs to be the first in the list to avoid
         // forcing other RequestHandlers to perform null checks on request.uri
         // to cover the (request.resourceId != 0) case.
+        //本地资源请求器，支持Res文件
         allRequestHandlers.add(new ResourceRequestHandler(context));
         if (extraRequestHandlers != null) {
             allRequestHandlers.addAll(extraRequestHandlers);
         }
+        // 相册资源请求器，支持这种格式'contacts/#/photo'
         allRequestHandlers.add(new ContactsPhotoRequestHandler(context));
+        //多媒体资源请求器，获取Video获取缩略图
         allRequestHandlers.add(new MediaStoreRequestHandler(context));
+        //content资源请求，支持'content://'
         allRequestHandlers.add(new ContentStreamRequestHandler(context));
+        //assets资源请求，支持'file:///android_asset/'
         allRequestHandlers.add(new AssetRequestHandler(context));
+        //文件资源请求，支持'file://'
         allRequestHandlers.add(new FileRequestHandler(context));
+        //网络资源请求，使用OKttp去加载
         allRequestHandlers.add(new NetworkRequestHandler(dispatcher.downloader, stats));
         requestHandlers = Collections.unmodifiableList(allRequestHandlers);
 
@@ -281,6 +291,8 @@ public class Picasso {
     /**
      * Pause existing requests with the given tag. Use {@link #resumeTag(Object)}
      * to resume requests with the given tag.
+     * 怎么实现在Adapter中的回收不在视野的ImageView
+     * 通过Picasso.pauseTag(tag),Picasso.resumeTag(tag)进行暂停/恢复加载，其实质是向Dispater发送Message删除缓存中的事件队列
      *
      * @see #resumeTag(Object)
      * @see RequestCreator#tag(Object)
@@ -439,6 +451,7 @@ public class Picasso {
      * <p>
      * <b>WARNING:</b> Enabling this will result in excessive object allocation. This should be only
      * be used for debugging Picasso behavior. Do NOT pass {@code BuildConfig.DEBUG}.
+     * 是否显示日志
      */
     @SuppressWarnings("UnusedDeclaration") // Public API.
     public void setLoggingEnabled(boolean enabled) {
@@ -499,6 +512,12 @@ public class Picasso {
         return transformed;
     }
 
+    /**
+     * 添加到targetToDeferredRequestCreator
+     *
+     * @param view
+     * @param request
+     */
     void defer(ImageView view, DeferredRequestCreator request) {
         // If there is already a deferred request, cancel it.
         if (targetToDeferredRequestCreator.containsKey(view)) {
@@ -608,6 +627,11 @@ public class Picasso {
         }
     }
 
+    /**
+     * 取消请求
+     *
+     * @param target
+     */
     void cancelExistingRequest(Object target) {
         checkMain();
         Action action = targetToAction.remove(target);
@@ -735,13 +759,19 @@ public class Picasso {
     @SuppressWarnings("UnusedDeclaration") // Public API.
     public static class Builder {
         private final Context context;
+        // 下载器对象
         private Downloader downloader;
+        // 线程池对象
         private ExecutorService service;
+        // 缓存对象
         private Cache cache;
+        // 监听器，图片Load失败监听器
         private Listener listener;
+        //图片处理方式
         private RequestTransformer transformer;
         //创建默认的处理器集合,即RequestHandlers.它们分别会处理不同的加载请求
         private List<RequestHandler> requestHandlers;
+        // 默认图片控制
         private Bitmap.Config defaultBitmapConfig;
 
         private boolean indicatorsEnabled;
@@ -895,14 +925,15 @@ public class Picasso {
             if (service == null) {
                 service = new PicassoExecutorService();
             }
+            //默认的图片处理
             if (transformer == null) {
                 transformer = RequestTransformer.IDENTITY;
             }
-
+            //数据统计
             Stats stats = new Stats(cache);
-
+            //Picasso调度器
             Dispatcher dispatcher = new Dispatcher(context, service, HANDLER, downloader, cache, stats);
-
+            //初始化Picasso默认配置
             return new Picasso(context, dispatcher, cache, listener, transformer, requestHandlers, stats,
                     defaultBitmapConfig, indicatorsEnabled, loggingEnabled);
         }
@@ -910,6 +941,10 @@ public class Picasso {
 
     /**
      * Describes where the image was loaded from.
+     * 在ImageView的左上角显示。
+     * 绿色－从内存中加载的图片
+     * 蓝色－从磁盘中加载的图片
+     * 红色－从网络中加载的图片
      */
     public enum LoadedFrom {
         MEMORY(Color.GREEN),
