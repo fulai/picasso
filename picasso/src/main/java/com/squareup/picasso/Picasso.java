@@ -501,6 +501,12 @@ public class Picasso {
         return requestHandlers;
     }
 
+    /**
+     * 转变请求
+     *
+     * @param request
+     * @return
+     */
     Request transformRequest(Request request) {
         Request transformed = requestTransformer.transformRequest(request);
         if (transformed == null) {
@@ -528,6 +534,7 @@ public class Picasso {
 
     void enqueueAndSubmit(Action action) {
         Object target = action.getTarget();
+        //发现这个action跟传进来的action不一样的话，那就取消掉之前的加载任务。最后将当前加载任务提交
         if (target != null && targetToAction.get(target) != action) {
             // This will also check we are on the main thread.
             cancelExistingRequest(target);
@@ -539,7 +546,7 @@ public class Picasso {
     void submit(Action action) {
         dispatcher.dispatchSubmit(action);
     }
-
+    //从内存中查找Bitmap
     Bitmap quickMemoryCacheCheck(String key) {
         Bitmap cached = cache.get(key);
         if (cached != null) {

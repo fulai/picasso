@@ -23,8 +23,10 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
+
 import java.io.IOException;
 
 import static android.graphics.Bitmap.createBitmap;
@@ -33,46 +35,48 @@ import static android.graphics.Shader.TileMode.REPEAT;
 
 public class GrayscaleTransformation implements Transformation {
 
-  private final Picasso picasso;
+    private final Picasso picasso;
 
-  public GrayscaleTransformation(Picasso picasso) {
-    this.picasso = picasso;
-  }
-
-  @Override public Bitmap transform(Bitmap source) {
-    Bitmap result = createBitmap(source.getWidth(), source.getHeight(), source.getConfig());
-    Bitmap noise;
-    try {
-      noise = picasso.load(R.drawable.noise).get();
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to apply transformation! Missing resource.");
+    public GrayscaleTransformation(Picasso picasso) {
+        this.picasso = picasso;
     }
 
-    BitmapShader shader = new BitmapShader(noise, REPEAT, REPEAT);
+    @Override
+    public Bitmap transform(Bitmap source) {
+        Bitmap result = createBitmap(source.getWidth(), source.getHeight(), source.getConfig());
+        Bitmap noise;
+        try {
+            noise = picasso.load(R.drawable.noise).get();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to apply transformation! Missing resource.");
+        }
 
-    ColorMatrix colorMatrix = new ColorMatrix();
-    colorMatrix.setSaturation(0);
-    ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
+        BitmapShader shader = new BitmapShader(noise, REPEAT, REPEAT);
 
-    Paint paint = new Paint(ANTI_ALIAS_FLAG);
-    paint.setColorFilter(filter);
+        ColorMatrix colorMatrix = new ColorMatrix();
+        colorMatrix.setSaturation(0);
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
 
-    Canvas canvas = new Canvas(result);
-    canvas.drawBitmap(source, 0, 0, paint);
+        Paint paint = new Paint(ANTI_ALIAS_FLAG);
+        paint.setColorFilter(filter);
 
-    paint.setColorFilter(null);
-    paint.setShader(shader);
-    paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(source, 0, 0, paint);
 
-    canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
+        paint.setColorFilter(null);
+        paint.setShader(shader);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
 
-    source.recycle();
-    noise.recycle();
+        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
 
-    return result;
-  }
+        source.recycle();
+        noise.recycle();
 
-  @Override public String key() {
-    return "grayscaleTransformation()";
-  }
+        return result;
+    }
+
+    @Override
+    public String key() {
+        return "grayscaleTransformation()";
+    }
 }

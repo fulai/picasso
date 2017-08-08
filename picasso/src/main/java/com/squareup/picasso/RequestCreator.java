@@ -73,6 +73,7 @@ public class RequestCreator {
     private int placeholderResId;
     //加载图片错误显示图片
     private int errorResId;
+    //缓存策略
     private int memoryPolicy;
     private int networkPolicy;
     private Drawable placeholderDrawable;
@@ -747,6 +748,7 @@ public class RequestCreator {
         }
         //创建request
         Request request = createRequest(started);
+        //创建key
         String requestKey = createKey(request);
         //是否需要在缓存里面先查找
         if (shouldReadFromMemoryCache(memoryPolicy)) {
@@ -787,6 +789,7 @@ public class RequestCreator {
 
     /**
      * Create the request optionally passing it through the request transformer.
+     * 创建请求
      */
     private Request createRequest(long started) {
         int id = nextId.getAndIncrement();

@@ -28,6 +28,10 @@ import static com.squareup.picasso.Picasso.Priority;
  * Action 是抽象类，他决定了图片的最后一个环节：
  * 如何将图片渲染在目标容器中（如 ImageView 和 RemoteViews 等），
  * 由于目标容器有多种情况，因此也有多个子类。
+ * <p>
+ * Request对象的引用，还需要Picasso实例，是否重试加载等等
+ * Action有个需要关注的点，那就是WeakReference<T> target,它持有的是Target(比如ImageView..)的弱引用，
+ * 这样可以保证加载时间很长的情况下
  *
  * @param <T>
  */
@@ -70,10 +74,24 @@ abstract class Action<T> {
         this.tag = (tag != null ? tag : this);
     }
 
+    /**
+     * 完成加载（图片数据和来源）
+     *
+     * @param result
+     * @param from
+     */
     abstract void complete(Bitmap result, Picasso.LoadedFrom from);
 
+    /**
+     * 加载数据失败
+     *
+     * @param e
+     */
     abstract void error(Exception e);
 
+    /**
+     * 取消加载
+     */
     void cancel() {
         cancelled = true;
     }

@@ -56,6 +56,7 @@ public abstract class RequestHandler {
      *
      * @see RequestHandler
      * @see #load(Request, int)
+     * 请求返回数据
      */
     public static final class Result {
         private final Picasso.LoadedFrom loadedFrom;
@@ -121,6 +122,7 @@ public abstract class RequestHandler {
 
     /**
      * Whether or not this {@link RequestHandler} can handle a request with the given {@link Request}.
+     * 是否能够处理请求
      */
     public abstract boolean canHandleRequest(Request data);
 

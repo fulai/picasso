@@ -30,28 +30,28 @@ import static com.squareup.picasso.Picasso.LoadedFrom;
  * adapter to ensure correct recycling behavior.
  */
 public interface Target {
-  /**
-   * Callback when an image has been successfully loaded.
-   * <p>
-   * <strong>Note:</strong> You must not recycle the bitmap.
-   */
-  void onBitmapLoaded(Bitmap bitmap, LoadedFrom from);
+    /**
+     * Callback when an image has been successfully loaded.
+     * <p>
+     * <strong>Note:</strong> You must not recycle the bitmap.
+     */
+    void onBitmapLoaded(Bitmap bitmap, LoadedFrom from);
 
-  /**
-   * Callback indicating the image could not be successfully loaded.
-   * <p>
-   * <strong>Note:</strong> The passed {@link Drawable} may be {@code null} if none has been
-   * specified via {@link RequestCreator#error(android.graphics.drawable.Drawable)}
-   * or {@link RequestCreator#error(int)}.
-   */
-  void onBitmapFailed(Exception e, Drawable errorDrawable);
+    /**
+     * Callback indicating the image could not be successfully loaded.
+     * <p>
+     * <strong>Note:</strong> The passed {@link Drawable} may be {@code null} if none has been
+     * specified via {@link RequestCreator#error(android.graphics.drawable.Drawable)}
+     * or {@link RequestCreator#error(int)}.
+     */
+    void onBitmapFailed(Exception e, Drawable errorDrawable);
 
-  /**
-   * Callback invoked right before your request is submitted.
-   * <p>
-   * <strong>Note:</strong> The passed {@link Drawable} may be {@code null} if none has been
-   * specified via {@link RequestCreator#placeholder(android.graphics.drawable.Drawable)}
-   * or {@link RequestCreator#placeholder(int)}.
-   */
-  void onPrepareLoad(Drawable placeHolderDrawable);
+    /**
+     * Callback invoked right before your request is submitted.
+     * <p>
+     * <strong>Note:</strong> The passed {@link Drawable} may be {@code null} if none has been
+     * specified via {@link RequestCreator#placeholder(android.graphics.drawable.Drawable)}
+     * or {@link RequestCreator#placeholder(int)}.
+     */
+    void onPrepareLoad(Drawable placeHolderDrawable);
 }

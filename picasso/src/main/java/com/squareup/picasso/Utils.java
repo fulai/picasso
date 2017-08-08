@@ -183,6 +183,7 @@ final class Utils {
 
     static String createKey(Request data, StringBuilder builder) {
         if (data.stableKey != null) {
+            //方法确保容量至少等于指定的最小值
             builder.ensureCapacity(data.stableKey.length() + KEY_PADDING);
             builder.append(data.stableKey);
         } else if (data.uri != null) {
