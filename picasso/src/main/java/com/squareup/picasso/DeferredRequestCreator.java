@@ -26,11 +26,13 @@ import java.lang.ref.WeakReference;
 
 /**
  * RequestCreator包装
+ * 负责监听图片显示过程
  */
 class DeferredRequestCreator implements OnPreDrawListener, OnAttachStateChangeListener {
     private final RequestCreator creator;
     @VisibleForTesting
     final WeakReference<ImageView> target;
+    //回调
     @VisibleForTesting
     Callback callback;
 

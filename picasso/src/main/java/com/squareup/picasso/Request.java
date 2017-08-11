@@ -255,6 +255,7 @@ public final class Request {
         private float rotationPivotX;
         private float rotationPivotY;
         private boolean hasRotationPivot;
+        //可清除的
         private boolean purgeable;
         private List<Transformation> transformations;
         private Bitmap.Config config;

@@ -270,6 +270,11 @@ final class Utils {
         return (int) (1024L * 1024L * memoryClass / 7);
     }
 
+    /**
+     * 是否开启飞行模式
+     * @param context
+     * @return
+     */
     static boolean isAirplaneModeOn(Context context) {
         ContentResolver contentResolver = context.getContentResolver();
         try {

@@ -69,14 +69,16 @@ public class RequestCreator {
     //有大小才行。另外，如果使用了fit方法，那么就不能调用resize
     private boolean deferred;
     private boolean setPlaceholder = true;
-    //默认显示图片
+    //默认显示图片id
     private int placeholderResId;
-    //加载图片错误显示图片
+    //加载图片错误显示图片id
     private int errorResId;
     //缓存策略
     private int memoryPolicy;
     private int networkPolicy;
+    //默认显示图片Drawable
     private Drawable placeholderDrawable;
+    //加载图片错误显示图片Drawable
     private Drawable errorDrawable;
     private Object tag;//目标
 
@@ -748,7 +750,7 @@ public class RequestCreator {
         }
         //创建request
         Request request = createRequest(started);
-        //创建key
+        //创建唯一key
         String requestKey = createKey(request);
         //是否需要在缓存里面先查找
         if (shouldReadFromMemoryCache(memoryPolicy)) {

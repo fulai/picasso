@@ -922,17 +922,19 @@ public class Picasso {
          */
         public Picasso build() {
             Context context = this.context;
-
+            //默认下载器
             if (downloader == null) {
                 downloader = new OkHttp3Downloader(context);
             }
+            //默认缓存
             if (cache == null) {
                 cache = new LruCache(context);
             }
+            //默认服务
             if (service == null) {
                 service = new PicassoExecutorService();
             }
-            //默认的图片处理
+            //默认请求处理
             if (transformer == null) {
                 transformer = RequestTransformer.IDENTITY;
             }
