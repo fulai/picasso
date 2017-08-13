@@ -47,6 +47,14 @@ class NetworkRequestHandler extends RequestHandler {
         return (SCHEME_HTTP.equals(scheme) || SCHEME_HTTPS.equals(scheme));
     }
 
+    /**
+     * 网络请求图片
+     *
+     * @param request       the data from which the image should be resolved.
+     * @param networkPolicy the {@link NetworkPolicy} for this request.
+     * @return
+     * @throws IOException
+     */
     @Override
     public Result load(Request request, int networkPolicy) throws IOException {
         okhttp3.Request downloaderRequest = createRequest(request, networkPolicy);

@@ -132,6 +132,7 @@ class Dispatcher {
             service.shutdown();
         }
         downloader.shutdown();
+        //停止looper循环
         dispatcherThread.quit();
         // Unregister network broadcast receiver on the main thread.
         Picasso.HANDLER.post(new Runnable() {
@@ -199,7 +200,7 @@ class Dispatcher {
             return;
         }
 
-        if (service.isShutdown()) {
+        if (service.isShutdown()) {//线程池是否关闭
             if (action.getPicasso().loggingEnabled) {
                 log(OWNER_DISPATCHER, VERB_IGNORED, action.request.logId(), "because shut down");
             }

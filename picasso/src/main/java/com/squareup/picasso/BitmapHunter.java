@@ -104,6 +104,7 @@ class BitmapHunter implements Runnable {
     Picasso.LoadedFrom loadedFrom;
     Exception exception;
     int exifOrientation; // Determined during decoding of original resource.
+    //重试
     int retryCount;
     Priority priority;
 

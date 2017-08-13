@@ -20,34 +20,36 @@ import android.graphics.drawable.Drawable;
 
 final class TargetAction extends Action<Target> {
 
-  TargetAction(Picasso picasso, Target target, Request data, int memoryPolicy, int networkPolicy,
-      Drawable errorDrawable, String key, Object tag, int errorResId) {
-    super(picasso, target, data, memoryPolicy, networkPolicy, errorResId, errorDrawable, key, tag,
-        false);
-  }
+    TargetAction(Picasso picasso, Target target, Request data, int memoryPolicy, int networkPolicy,
+                 Drawable errorDrawable, String key, Object tag, int errorResId) {
+        super(picasso, target, data, memoryPolicy, networkPolicy, errorResId, errorDrawable, key, tag,
+                false);
+    }
 
-  @Override void complete(Bitmap result, Picasso.LoadedFrom from) {
-    if (result == null) {
-      throw new AssertionError(
-          String.format("Attempted to complete action with no result!\n%s", this));
+    @Override
+    void complete(Bitmap result, Picasso.LoadedFrom from) {
+        if (result == null) {
+            throw new AssertionError(
+                    String.format("Attempted to complete action with no result!\n%s", this));
+        }
+        Target target = getTarget();
+        if (target != null) {
+            target.onBitmapLoaded(result, from);
+            if (result.isRecycled()) {
+                throw new IllegalStateException("Target callback must not recycle bitmap!");
+            }
+        }
     }
-    Target target = getTarget();
-    if (target != null) {
-      target.onBitmapLoaded(result, from);
-      if (result.isRecycled()) {
-        throw new IllegalStateException("Target callback must not recycle bitmap!");
-      }
-    }
-  }
 
-  @Override void error(Exception e) {
-    Target target = getTarget();
-    if (target != null) {
-      if (errorResId != 0) {
-        target.onBitmapFailed(e, picasso.context.getResources().getDrawable(errorResId));
-      } else {
-        target.onBitmapFailed(e, errorDrawable);
-      }
+    @Override
+    void error(Exception e) {
+        Target target = getTarget();
+        if (target != null) {
+            if (errorResId != 0) {
+                target.onBitmapFailed(e, picasso.context.getResources().getDrawable(errorResId));
+            } else {
+                target.onBitmapFailed(e, errorDrawable);
+            }
+        }
     }
-  }
 }

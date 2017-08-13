@@ -47,6 +47,7 @@ import static com.squareup.picasso.Utils.checkNotNull;
  * 图片来源类型包括：Assets 资源、SD 卡图片、网络图片、联系人照片、其他内容服务提供者、多媒体资源等。因此该抽象类有多个具体的子类。
  * 这些子类将以集合的形式，存在于 Picasso 单例中，当 Request 符合 RequestHandler 的处理规则时，便以该 Hander 进行处理。
  * 返回的字节流将经过一系列的解码、变换后，变成最终的 Bitmap 对象。
+ * --实现各种资源请求方式的抽象类，像ResourceRequestHandler，FileRequestHandler，NetworkRequestHandler都是请求资源方式
  */
 public abstract class RequestHandler {
     /**
@@ -55,6 +56,7 @@ public abstract class RequestHandler {
      *
      * @see RequestHandler
      * @see #load(Request, int)
+     * 请求返回数据
      */
     public static final class Result {
         private final Picasso.LoadedFrom loadedFrom;
@@ -120,6 +122,7 @@ public abstract class RequestHandler {
 
     /**
      * Whether or not this {@link RequestHandler} can handle a request with the given {@link Request}.
+     * 是否能够处理请求
      */
     public abstract boolean canHandleRequest(Request data);
 

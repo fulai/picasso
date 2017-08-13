@@ -69,13 +69,16 @@ public class RequestCreator {
     //有大小才行。另外，如果使用了fit方法，那么就不能调用resize
     private boolean deferred;
     private boolean setPlaceholder = true;
-    //默认显示图片
+    //默认显示图片id
     private int placeholderResId;
-    //加载图片错误显示图片
+    //加载图片错误显示图片id
     private int errorResId;
+    //缓存策略
     private int memoryPolicy;
     private int networkPolicy;
+    //默认显示图片Drawable
     private Drawable placeholderDrawable;
+    //加载图片错误显示图片Drawable
     private Drawable errorDrawable;
     private Object tag;//目标
 
@@ -747,6 +750,7 @@ public class RequestCreator {
         }
         //创建request
         Request request = createRequest(started);
+        //创建唯一key
         String requestKey = createKey(request);
         //是否需要在缓存里面先查找
         if (shouldReadFromMemoryCache(memoryPolicy)) {
@@ -767,6 +771,9 @@ public class RequestCreator {
         if (setPlaceholder) {
             setPlaceholder(target, getPlaceholderDrawable());
         }
+        //然后这个Action会发送给Dispatcher处理，然后根据发送的Action中的Request中的uri选择哪个图片加载器，
+        // 找到之后生成一个BitmapHunter对象，BitmapHunter是一个runnable,会执行加载图片的功能，最后加载完成之后
+        // ，通过Dispatcher进行回调
         Action action =
                 new ImageViewAction(picasso, target, request, memoryPolicy, networkPolicy, errorResId,
                         errorDrawable, requestKey, tag, callback, noFade);
@@ -784,6 +791,7 @@ public class RequestCreator {
 
     /**
      * Create the request optionally passing it through the request transformer.
+     * 创建请求
      */
     private Request createRequest(long started) {
         int id = nextId.getAndIncrement();

@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 内置的线程池，容量定义策略见下文分析。
+ * --Picasso默认线程池,根据网络情况创建线程池的大小，Wifi(4),4G(3),3G(2),2G(1)
  * The default {@link java.util.concurrent.ExecutorService} used for new {@link Picasso} instances.
  * <p>
  * Exists as a custom type so that we can differentiate the use of defaults versus a user-supplied
@@ -39,7 +40,7 @@ class PicassoExecutorService extends ThreadPoolExecutor {
         super(DEFAULT_THREAD_COUNT, DEFAULT_THREAD_COUNT, 0, TimeUnit.MILLISECONDS,
                 new PriorityBlockingQueue<Runnable>(), new Utils.PicassoThreadFactory());
     }
-
+    //Picasso的线程池，是根据网络情况进行创建
     void adjustThreadCount(NetworkInfo info) {
         if (info == null || !info.isConnectedOrConnecting()) {
             setThreadCount(DEFAULT_THREAD_COUNT);

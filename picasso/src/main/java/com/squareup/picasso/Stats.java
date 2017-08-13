@@ -25,6 +25,7 @@ import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
 /**
  * 统计图片加载过程中的数据，如缓存命中数、命中率、图片下载大小，经过变换的图片大小等信息
+ * 数据统计
  */
 class Stats {
     private static final int CACHE_HIT = 0;

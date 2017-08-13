@@ -34,6 +34,8 @@ import static java.util.Collections.unmodifiableList;
 /**
  * Immutable data about an image and the transformations that will be applied to it.
  * 封装了图片加载请求的信息，如图片的Uri、Resource ID、宽高、scaleType 等
+ * <p>
+ * Request关注的是请求本身，比如请求的源、id、开始时间、图片变换配置、优先级等等
  */
 public final class Request {
     private static final long TOO_LONG_LOG = TimeUnit.SECONDS.toNanos(5);
@@ -253,6 +255,7 @@ public final class Request {
         private float rotationPivotX;
         private float rotationPivotY;
         private boolean hasRotationPivot;
+        //可清除的
         private boolean purgeable;
         private List<Transformation> transformations;
         private Bitmap.Config config;

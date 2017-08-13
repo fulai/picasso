@@ -146,6 +146,11 @@ final class PicassoDrawable extends BitmapDrawable {
         super.onBoundsChange(bounds);
     }
 
+    /**
+     * 绘制调试指示灯
+     *
+     * @param canvas
+     */
     private void drawDebugIndicator(Canvas canvas) {
         DEBUG_PAINT.setColor(WHITE);
         Path path = getTrianglePath(0, 0, (int) (16 * density));
